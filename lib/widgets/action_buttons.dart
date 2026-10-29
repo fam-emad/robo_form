@@ -9,11 +9,34 @@ class PrimaryButton extends StatelessWidget {
   final String label;
   final IconData? icon;
   final VoidCallback? onTap;
+  final Gradient? gradient;
+  final Color? color;
+  final Color textColor;
 
-  const PrimaryButton({super.key, required this.label, this.icon, this.onTap});
+  const PrimaryButton({
+    super.key,
+    required this.label,
+    this.icon,
+    this.onTap,
+    this.gradient,
+    this.color,
+    this.textColor = Colors.white,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final effectiveGradient = gradient ??
+        (color == null
+            ? const LinearGradient(
+                colors: [Color(0xFF35D0E6), Color(0xFF00B4D8)],
+              )
+            : null);
+
+    final isCyanDefault = effectiveGradient != null && color == null;
+    final finalTextColor = isCyanDefault && textColor == Colors.white
+        ? const Color(0xFF070B12)
+        : textColor;
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -22,17 +45,24 @@ class PrimaryButton extends StatelessWidget {
         child: Ink(
           height: 46,
           decoration: BoxDecoration(
+            color: color,
             borderRadius: BorderRadius.circular(10),
-            gradient: const LinearGradient(
-              colors: [AppColors.red, AppColors.redDark],
-            ),
+            gradient: effectiveGradient,
+            boxShadow: [
+              BoxShadow(
+                color: (color ?? const Color(0xFF35D0E6)).withValues(alpha: 0.25),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
           child: Center(
             child: IconText(
               icon: icon,
               iconSize: 16,
+              iconColor: finalTextColor,
               iconAfter: true,
-              label: AppText(label, 12, weight: FontWeight.w600),
+              label: AppText(label, 12, weight: FontWeight.w700, color: finalTextColor),
             ),
           ),
         ),

@@ -12,10 +12,20 @@ class PageShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: const RoboDrawer(
+        logoAsset: 'assets/images/logo.png',
+        wordmarkAsset: 'assets/images/title.png',
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const RoboNavBar(),
+            const RoboNavBar(
+              logoAsset: 'assets/images/logo.png',
+              wordmarkAsset: 'assets/images/title.png',
+              universityLogo: 'assets/images/asu_logo.jpg',
+              unionLogo: 'assets/images/fcis_logo.jpg',
+              calligraphyAsset: 'assets/images/wordmark.png',
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 32),
               child: ConstrainedBox(

@@ -13,6 +13,8 @@ class AppText extends StatelessWidget {
   final FontWeight? weight;
   final double? height;
   final double? letterSpacing;
+  final TextOverflow? overflow;
+  final int? maxLines;
 
   const AppText(
     this.text,
@@ -22,6 +24,8 @@ class AppText extends StatelessWidget {
     this.weight,
     this.height,
     this.letterSpacing,
+    this.overflow,
+    this.maxLines,
   });
 
   const AppText.muted(
@@ -31,6 +35,8 @@ class AppText extends StatelessWidget {
     this.weight,
     this.height,
     this.letterSpacing,
+    this.overflow,
+    this.maxLines,
   }) : color = AppColors.textMuted;
 
   const AppText.dim(
@@ -40,12 +46,16 @@ class AppText extends StatelessWidget {
     this.weight,
     this.height,
     this.letterSpacing,
+    this.overflow,
+    this.maxLines,
   }) : color = AppColors.textDim;
 
   @override
   Widget build(BuildContext context) {
     return Text(
       text,
+      overflow: overflow,
+      maxLines: maxLines,
       style: TextStyle(
         fontSize: size,
         color: color,
