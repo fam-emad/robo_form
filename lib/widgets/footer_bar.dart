@@ -1,12 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../core/app_colors.dart';
 import 'app_text.dart';
 import 'gap.dart';
 import 'icon_text.dart';
 
 class FooterBar extends StatelessWidget {
-  final VoidCallback? onContact;
-  const FooterBar({super.key, this.onContact});
+  const FooterBar({super.key});
+
+  Future<void> onContact() async {
+    final Uri facebookUri = Uri.parse("https://www.facebook.com/RoboTech.FCIS");
+
+    try {
+      await launchUrl(
+        facebookUri,
+        mode: LaunchMode.platformDefault,
+      );
+    } catch (e) {
+      debugPrint("Could not launch Facebook: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

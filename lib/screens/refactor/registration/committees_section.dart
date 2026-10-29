@@ -12,7 +12,7 @@ class _Committee {
 const _committees = [
   _Committee('Mobile Development', 'Flutter / App Dev', Icons.smartphone),
   _Committee('AI', 'Machine Learning / Computer Vision / Deep Learning / NLP', Icons.psychology),
-  _Committee('Embedded Systems', 'Microcontrollers', Icons.memory),
+  _Committee('Embedded Systems', 'Hardware Architecture / Microcontrollers', Icons.memory),
   _Committee('IoT & Robotics', 'Adding Motion, Control and Connectivity', Icons.precision_manufacturing),
   _Committee('Mechanical Design', 'Designing Hardware Body', Icons.engineering),
 

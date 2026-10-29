@@ -38,10 +38,10 @@ class SuccessDetails extends StatelessWidget {
               icon: Icons.add,
               onTap: () => Navigator.of(context).maybePop()),
           const Gap.v(10),
-          OutlineActionButton(
-              label: 'Share with a Friend',
-              icon: Icons.share_outlined,
-              onTap: () {}),
+          // OutlineActionButton(
+          //     label: 'Share with a Friend',
+          //     icon: Icons.share_outlined,
+          //     onTap: () {}),
         ],
       ),
     );

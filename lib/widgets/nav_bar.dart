@@ -31,6 +31,7 @@ class NavLink extends StatelessWidget {
               label,
               12,
               color: active ? Colors.white : AppColors.textMuted,
+              weight: active ? FontWeight.w700 : FontWeight.w500,
             ),
             const Gap.v(4),
             Container(
@@ -142,6 +143,7 @@ class StudentUnionBadge extends StatelessWidget {
 class RoboDrawer extends StatelessWidget {
   final String? logoAsset;
   final String? wordmarkAsset;
+  final String activeTab;
   final VoidCallback? onAboutTap;
   final VoidCallback? onJoinTap;
 
@@ -149,6 +151,7 @@ class RoboDrawer extends StatelessWidget {
     super.key,
     this.logoAsset,
     this.wordmarkAsset,
+    this.activeTab = 'join',
     this.onAboutTap,
     this.onJoinTap,
   });
@@ -157,7 +160,7 @@ class RoboDrawer extends StatelessWidget {
     Navigator.of(context).pop();
     if (onAboutTap != null) {
       onAboutTap!();
-    } else {
+    } else if (activeTab != 'about') {
       Navigator.of(context).push(
         MaterialPageRoute(builder: (_) => const AboutScreen()),
       );
@@ -168,7 +171,7 @@ class RoboDrawer extends StatelessWidget {
     Navigator.of(context).pop();
     if (onJoinTap != null) {
       onJoinTap!();
-    } else {
+    } else if (activeTab != 'join') {
       Navigator.of(context).popUntil((route) => route.isFirst);
     }
   }
@@ -200,12 +203,29 @@ class RoboDrawer extends StatelessWidget {
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
-                  side: const BorderSide(color: AppColors.border),
+                  side: BorderSide(
+                    color: activeTab == 'about' ? AppColors.cyan : AppColors.border,
+                  ),
                 ),
-                tileColor: AppColors.cardAlt,
-                leading: const Icon(Icons.info_outline, color: AppColors.cyan, size: 20),
-                title: const AppText('About RoboTech', 13, weight: FontWeight.w600),
-                trailing: const Icon(Icons.arrow_forward_ios, size: 12, color: AppColors.textDim),
+                tileColor: activeTab == 'about'
+                    ? AppColors.cyan.withValues(alpha: 0.1)
+                    : AppColors.cardAlt,
+                leading: Icon(
+                  Icons.info_outline,
+                  color: activeTab == 'about' ? AppColors.cyan : AppColors.textMuted,
+                  size: 20,
+                ),
+                title: AppText(
+                  'About RoboTech',
+                  13,
+                  weight: activeTab == 'about' ? FontWeight.w700 : FontWeight.w600,
+                  color: activeTab == 'about' ? AppColors.cyan : Colors.white,
+                ),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  size: 12,
+                  color: activeTab == 'about' ? AppColors.cyan : AppColors.textDim,
+                ),
                 onTap: () => _openAbout(context),
               ),
               const Gap.v(12),
@@ -213,12 +233,29 @@ class RoboDrawer extends StatelessWidget {
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
-                  side: const BorderSide(color: AppColors.border),
+                  side: BorderSide(
+                    color: activeTab == 'join' ? AppColors.cyan : AppColors.border,
+                  ),
                 ),
-                tileColor: AppColors.cardAlt,
-                leading: const Icon(Icons.group_add_outlined, color: AppColors.cyan, size: 20),
-                title: const AppText('Join the team', 13, weight: FontWeight.w600),
-                trailing: const Icon(Icons.arrow_forward_ios, size: 12, color: AppColors.textDim),
+                tileColor: activeTab == 'join'
+                    ? AppColors.cyan.withValues(alpha: 0.1)
+                    : AppColors.cardAlt,
+                leading: Icon(
+                  Icons.group_add_outlined,
+                  color: activeTab == 'join' ? AppColors.cyan : AppColors.textMuted,
+                  size: 20,
+                ),
+                title: AppText(
+                  'Join the team',
+                  13,
+                  weight: activeTab == 'join' ? FontWeight.w700 : FontWeight.w600,
+                  color: activeTab == 'join' ? AppColors.cyan : Colors.white,
+                ),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  size: 12,
+                  color: activeTab == 'join' ? AppColors.cyan : AppColors.textDim,
+                ),
                 onTap: () => _openJoin(context),
               ),
               const Spacer(),
@@ -241,6 +278,7 @@ class RoboNavBar extends StatelessWidget {
   final String? universityLogo;
   final String? unionLogo;
   final String? calligraphyAsset;
+  final String activeTab; // 'join' or 'about'
   final VoidCallback? onAboutTap;
   final VoidCallback? onJoinTap;
 
@@ -251,6 +289,7 @@ class RoboNavBar extends StatelessWidget {
     this.universityLogo,
     this.unionLogo,
     this.calligraphyAsset = 'assets/images/wordmark.png',
+    this.activeTab = 'join',
     this.onAboutTap,
     this.onJoinTap,
   });
@@ -258,7 +297,7 @@ class RoboNavBar extends StatelessWidget {
   void _handleAbout(BuildContext context) {
     if (onAboutTap != null) {
       onAboutTap!();
-    } else {
+    } else if (activeTab != 'about') {
       Navigator.of(context).push(
         MaterialPageRoute(builder: (_) => const AboutScreen()),
       );
@@ -268,7 +307,7 @@ class RoboNavBar extends StatelessWidget {
   void _handleJoin(BuildContext context) {
     if (onJoinTap != null) {
       onJoinTap!();
-    } else {
+    } else if (activeTab != 'join') {
       Navigator.of(context).popUntil((route) => route.isFirst);
     }
   }
@@ -347,11 +386,12 @@ class RoboNavBar extends StatelessWidget {
           const Spacer(),
           NavLink(
             label: 'About RoboTech',
+            active: activeTab == 'about',
             onTap: () => _handleAbout(context),
           ),
           NavLink(
             label: 'Join the team',
-            active: true,
+            active: activeTab == 'join',
             onTap: () => _handleJoin(context),
           ),
           const Spacer(),

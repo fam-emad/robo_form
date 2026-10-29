@@ -10,13 +10,11 @@ import 'two_tone_title.dart';
 class HeroPanel extends StatelessWidget {
   final String? robotImage;
   final String? logoWordmarkImage;
-  final String? calligraphyImage;
 
   const HeroPanel({
     super.key,
-    this.robotImage,
-    this.logoWordmarkImage,
-    this.calligraphyImage,
+    this.robotImage = "assets/images/logo.png",
+    this.logoWordmarkImage = "assets/images/wordmark.png",
   });
 
   @override
@@ -44,23 +42,10 @@ class HeroPanel extends StatelessWidget {
           const Gap.v(14),
           ImageSlot(
               assetPath: logoWordmarkImage,
-              width: 140,
-              height: 34,
-              label: 'RoboTech logo'),
-          const Gap.v(10),
-          const TwoToneTitle(
-            first: 'Human curiosity.',
-            second: 'Limitless possibility.',
-            size: 18,
-          ),
-          const Gap.v(14),
-          ImageSlot(
-              assetPath: calligraphyImage,
-              width: 160,
-              height: 50,
+              width: double.infinity,
               label: 'Arabic calligraphy'),
           const Gap.v(10),
-          const AppText.dim('BUILT BY STUDENTS, FOR TOMORROW', 6,
+          const AppText.dim('BUILT BY STUDENTS, FOR Students', 6,
               letterSpacing: 1.2),
         ],
       ),

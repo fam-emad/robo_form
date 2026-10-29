@@ -16,7 +16,7 @@ class TwoToneTitle extends StatelessWidget {
     required this.second,
     required this.size,
     this.height,
-    this.alignment = CrossAxisAlignment.center,
+    this.alignment = CrossAxisAlignment.start,
   });
 
   @override

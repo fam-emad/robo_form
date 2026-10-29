@@ -25,73 +25,73 @@ const _allCommittees = [
     name: 'Mobile Development',
     category: 'Technical',
     icon: Icons.smartphone,
-    color: AppColors.cyan,
+    color: Color(0xFF0EA5E9),
     description:
-        'Build high-performance, beautiful cross-platform applications using Flutter and Dart. Learn modern app architecture, state management, REST APIs, and UI/UX implementation.',
-    skills: ['Flutter', 'Dart', 'State Management', 'REST API', 'Git'],
+    'Build cross-platform apps from scratch using Dart and Flutter. Create interactive UIs, integrate APIs, and utilize mobile sensors to remotely control and monitor our robots.',
+    skills: ['Dart & Flutter', 'Cross-Platform Dev', 'API Integration', 'UI Implementation', 'Hardware Control'],
   ),
   CommitteeDetail(
-    name: 'AI & Data Science',
+    name: 'AI',
     category: 'Technical',
     icon: Icons.psychology,
-    color: AppColors.cyan,
+    color: Color(0xFF06B6D4), // Purple
     description:
-        'Explore Machine Learning, Computer Vision, Deep Learning, and NLP. Train intelligent models for real-world robotics and automation tasks.',
-    skills: ['Python', 'Machine Learning', 'Computer Vision', 'PyTorch', 'NLP'],
+    'Journey from understanding data patterns to seeing the world. Master Data Analysis and ML, progressing to Deep Learning, CV, and NLP to give our machines true perception.',
+    skills: ['Python', 'Data Analysis', 'Machine Learning', 'Computer Vision', 'NLP & Deep Learning'],
   ),
   CommitteeDetail(
     name: 'Embedded Systems',
     category: 'Technical',
     icon: Icons.memory,
-    color: AppColors.cyan,
+    color: Color(0xFF10B981), // Emerald Green
     description:
-        'The heart of hardware intelligence. Design firmware for microcontrollers, write C/C++, interface with sensors, and master real-time operating systems.',
-    skills: ['C / C++', 'Microcontrollers', 'AVR / ARM / ESP32', 'RTOS', 'Protocols'],
+    'Bridge the gap between hardware and software. Design custom microcontrollers, write low-level code, and integrate sensors to create a seamless, zero-abstraction core system.',
+    skills: ['Microcontrollers', 'C / C++', 'Sensors & Hardware', 'System Architecture', 'Low-Level Coding'],
   ),
   CommitteeDetail(
     name: 'IoT & Robotics',
     category: 'Technical',
     icon: Icons.precision_manufacturing,
-    color: AppColors.cyan,
+    color: Color(0xFFF97316),
     description:
-        'Bring physical machines to life. Focus on kinematics, control systems, ROS (Robot Operating System), wireless connectivity, and autonomous robotic navigation.',
-    skills: ['ROS', 'Kinematics', 'Control Systems', 'MQTT', 'Autonomous Systems'],
+    'Turn abstract code into a moving reality. Use sensors for environmental perception, control movement via motors, and connect machines using wired and wireless networks.',
+    skills: ['Sensors & Motors', 'Wired/Wireless Networks', 'Hardware Assembly', 'Actuators', 'Robotics Logic'],
   ),
   CommitteeDetail(
     name: 'Mechanical Design',
     category: 'Technical',
     icon: Icons.engineering,
-    color: AppColors.cyan,
+    color: Color(0xFFF59E0B), // Amber / Gold
     description:
-        'Engineer the physical body and structural integrity of robots. Master 3D CAD modeling, SolidWorks, stress analysis, 3D printing, and mechanical fabrication.',
-    skills: ['SolidWorks', '3D CAD', '3D Printing', 'Chassis Design', 'Fabrication'],
+    'Transform ideas from 2D concepts into 3D reality. Apply physics and mechanics to design, assemble, and build a strong, balanced physical body that gives the robot its strength.',
+    skills: ['Physics & Mechanics', '3D Modeling', 'Structural Assembly', 'CAD Design', 'Prototyping'],
   ),
   CommitteeDetail(
     name: 'Media & UI/UX',
     category: 'Creative',
     icon: Icons.design_services,
-    color: AppColors.amber,
+    color: Color(0xFFEC4899), // Rose / Pink
     description:
-        'Shape RoboTech\'s visual identity. Create compelling UI/UX mockups, graphic designs, promotional videos, photography, and brand identity materials.',
-    skills: ['Figma UI/UX', 'Graphic Design', 'Video Editing', 'Branding', 'Motion Graphics'],
+    'The aesthetic touch and imagination behind the tech. Engineer seamless user experiences (UI/UX), craft compelling visual media, and build an inspiring brand identity through storytelling.',
+    skills: ['UI/UX Engineering', 'Visual Media & Video', 'Graphic Design', 'Branding', 'Storytelling'],
   ),
   CommitteeDetail(
-    name: 'PR & Marketing',
+    name: 'PR',
     category: 'Operations',
     icon: Icons.campaign,
-    color: AppColors.green,
+    color: Color(0xFF14B8A6), // Teal
     description:
-        'The voice and face of RoboTech. Build relationships with sponsors, manage public relations, organize major tech events, and hone elite presentation skills.',
-    skills: ['Public Speaking', 'Sponsorship', 'Communication', 'Event Hosting', 'PR Strategy'],
+    'The confident voice of the team. Develop elite communication and presentation skills, step out of your comfort zone, and effectively present our ideas to the world.',
+    skills: ['Communication', 'Presentation Skills', 'Public Speaking', 'Confidence Building', 'Networking'],
   ),
   CommitteeDetail(
     name: 'HR & PM',
     category: 'Management',
     icon: Icons.groups,
-    color: Color(0xFFA855F7), // Soft Royal Purple for Leadership & Management
+    color: Color(0xFF6366F1), // Indigo / Violet
     description:
-        'Drive team performance and project delivery. Recruit top talent, foster team culture, monitor project milestones, and ensure operational excellence.',
-    skills: ['Project Management', 'Agile / Scrum', 'Talent Acquisition', 'Leadership', 'Operations'],
+    'Build the foundation and culture where our team thrives. Discover raw talent, place people in their right spots, and transform individuals into one cohesive unit with a shared goal.',
+    skills: ['Talent Discovery', 'Culture Building', 'Team Management', 'Operations', 'Strategic Planning'],
   ),
 ];
 
@@ -105,17 +105,18 @@ class AboutScreen extends StatelessWidget {
       bottom: true,
       child: PageShell(
         maxWidth: 1000,
+        activeTab: 'about',
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Back Button & Header
+            // Back Button & Status Badge Header Row
             Row(
               children: [
                 InkWell(
                   borderRadius: BorderRadius.circular(8),
                   onTap: () => Navigator.of(context).pop(),
                   child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                    padding: EdgeInsets.symmetric(vertical: 4),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -130,18 +131,18 @@ class AboutScreen extends StatelessWidget {
                 const StatusBadge(label: 'OUR COMMITTEES · 2026 / 27'),
               ],
             ),
-            const Gap.v(20),
+            const Gap.v(14),
             const TwoToneTitle(
               first: 'About RoboTech',
               second: 'Committees & Teams.',
               size: 26,
             ),
-            const Gap.v(8),
+            const Gap.v(6),
             const AppText.muted(
               'Discover our specialized technical, creative, and operational teams driving engineering excellence, innovation, and community growth.',
               12,
             ),
-            const Gap.v(28),
+            const Gap.v(24),
 
             // Committee Cards Grid / List
             LayoutBuilder(builder: (context, c) {
@@ -161,7 +162,7 @@ class AboutScreen extends StatelessWidget {
               );
             }),
 
-            const Gap.v(36),
+            const Gap.v(32),
             // Call to Action Banner
             BorderedBox(
               radius: 16,
