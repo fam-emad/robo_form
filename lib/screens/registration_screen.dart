@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../core/app_colors.dart';
+import '../services/sheets_service.dart';
 import '../widgets/widgets.dart';
 import 'refactor/registration/field_keys.dart';
 import 'refactor/registration/registration_form.dart';
@@ -31,6 +33,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   bool _isStudent = true;
   bool _agree = false;
   bool _attempted = false;
+  bool _submitting = false;
   final Set<String> _selected = {};
 
   @override
@@ -55,7 +58,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         _selected.contains(name) ? _selected.remove(name) : _selected.add(name);
       });
 
-  void _submit() {
+  String _val(String k) => (_keys[k]?.currentState?.value ?? '').trim();
+
+  Future<void> _submit() async {
+    if (_submitting) return;
     setState(() => _attempted = true);
     final fieldsOk = _formKey.currentState!.validate();
     final ok = fieldsOk && _selected.isNotEmpty && _agree;
@@ -77,19 +83,52 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     final ref = (DateTime.now().millisecondsSinceEpoch % 100000)
         .toString()
         .padLeft(5, '0');
+    final referenceId = '#RBT-2026-$ref';
+
+    setState(() => _submitting = true);
+    try {
+      await SheetsService.submit({
+        'referenceId': referenceId,
+        'arName': _val('arName'),
+        'enName': name,
+        'nid': _val('nid'),
+        'seat': _val('seat'),
+        'level': _level,
+        'isStudent': _isStudent,
+        'address': _val('address'),
+        'phone': _val('phone'),
+        'email': _email.text.trim(),
+        'dept': _val('dept'),
+        'discord': _val('discord'),
+        'linkedin': _val('linkedin'),
+        'committees': _selected.toList(),
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _submitting = false);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: AppColors.red,
+        content: Text(e.toString()),
+      ));
+      return;
+    }
+    if (!mounted) return;
+    setState(() => _submitting = false);
+
     Navigator.of(context).push(MaterialPageRoute(
       builder: (_) => SuccessScreen(
         applicantName: name.split(RegExp(r'\s+')).first,
         fullName: name,
         committees: _selected.toList(),
-        referenceId: '#RBT-2026-$ref',
+        referenceId: referenceId,
       ),
     ));
   }
 
   @override
   Widget build(BuildContext context) {
-    return PageShell(
+    return Stack(children: [
+      PageShell(
       maxWidth: 900,
       child: RegistrationForm(
         formKey: _formKey,
@@ -109,6 +148,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         onAgreeChanged: (v) => setState(() => _agree = v),
         onSubmit: _submit,
       ),
-    );
+    ),
+      if (_submitting)
+        const Positioned.fill(
+          child: ColoredBox(
+            color: Color(0x99000000),
+            child: Center(child: CircularProgressIndicator()),
+          ),
+        ),
+    ]);
   }
 }
