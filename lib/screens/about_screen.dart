@@ -23,7 +23,7 @@ class CommitteeDetail {
 const _allCommittees = [
   CommitteeDetail(
     name: 'Mobile Development',
-    category: 'Technical',
+    category: 'Software',
     icon: Icons.smartphone,
     color: Color(0xFF0EA5E9),
     description:
@@ -32,7 +32,7 @@ const _allCommittees = [
   ),
   CommitteeDetail(
     name: 'AI',
-    category: 'Technical',
+    category: 'Software',
     icon: Icons.psychology,
     color: Color(0xFF06B6D4), // Purple
     description:
@@ -41,7 +41,7 @@ const _allCommittees = [
   ),
   CommitteeDetail(
     name: 'Embedded Systems',
-    category: 'Technical',
+    category: 'Hardware',
     icon: Icons.memory,
     color: Color(0xFF10B981), // Emerald Green
     description:
@@ -50,7 +50,7 @@ const _allCommittees = [
   ),
   CommitteeDetail(
     name: 'IoT & Robotics',
-    category: 'Technical',
+    category: 'Hardware',
     icon: Icons.precision_manufacturing,
     color: Color(0xFFF97316),
     description:
@@ -59,7 +59,7 @@ const _allCommittees = [
   ),
   CommitteeDetail(
     name: 'Mechanical Design',
-    category: 'Technical',
+    category: 'Hardware',
     icon: Icons.engineering,
     color: Color(0xFFF59E0B), // Amber / Gold
     description:
@@ -77,7 +77,7 @@ const _allCommittees = [
   ),
   CommitteeDetail(
     name: 'PR',
-    category: 'Operations',
+    category: 'Outreach',
     icon: Icons.campaign,
     color: Color(0xFF14B8A6), // Teal
     description:
@@ -88,7 +88,7 @@ const _allCommittees = [
     name: 'HR & PM',
     category: 'Management',
     icon: Icons.groups,
-    color: Color(0xFF6366F1), // Indigo / Violet
+    color: Color(0xFF9271F6), // Indigo / Violet
     description:
     'Build the foundation and culture where our team thrives. Discover raw talent, place people in their right spots, and transform individuals into one cohesive unit with a shared goal.',
     skills: ['Talent Discovery', 'Culture Building', 'Team Management', 'Operations', 'Strategic Planning'],
@@ -128,7 +128,7 @@ class AboutScreen extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
-                const StatusBadge(label: 'OUR COMMITTEES · 2026 / 27'),
+                const StatusBadge(label: 'OUR COMMITTEES · 2026 / 2027'),
               ],
             ),
             const Gap.v(14),
