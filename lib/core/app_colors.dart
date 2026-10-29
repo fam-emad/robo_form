@@ -15,8 +15,4 @@ class AppColors {
   static const textPrimary = Colors.white;
   static const textMuted = Color(0xFF8A97A8);
   static const textDim = Color(0xFF5C6877);
-
-  /// ألوان التمييز بالتبادل (كروت اللجان، تاجات اللجان في صفحة النجاح).
-  static const accents = [cyan, red];
-  static Color accent(int index) => accents[index % accents.length];
 }

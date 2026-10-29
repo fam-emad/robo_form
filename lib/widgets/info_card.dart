@@ -81,7 +81,7 @@ class InfoCard extends StatelessWidget {
             label: 'Committees Selected',
             trailing: Row(children: [
               for (var i = 0; i < committees.length; i++)
-                TagChip(label: committees[i], color: AppColors.accent(i)),
+                TagChip(label: committees[i], color: AppColors.cyan),
             ]),
           ),
           InfoRow(

@@ -10,13 +10,16 @@ class _Committee {
 }
 
 const _committees = [
-  _Committee('Mobile Dev', 'iOS, Android, Flutter', Icons.phone_android),
-  _Committee('Software', 'Software / Programming', Icons.code),
-  _Committee('Media & Design', 'Graphic, Video, Content', Icons.camera_alt_outlined),
-  _Committee('PR', 'Public Relations / Outreach', Icons.campaign_outlined),
-  _Committee('HR', 'Human Resources / Operations', Icons.groups_outlined),
-  _Committee('Logistics', 'Events / Coordination', Icons.local_shipping_outlined),
-];
+  _Committee('Mobile Development', 'Flutter / App Dev', Icons.smartphone),
+  _Committee('AI', 'Machine Learning / Computer Vision / Deep Learning / NLP', Icons.psychology),
+  _Committee('Embedded Systems', 'Microcontrollers', Icons.memory),
+  _Committee('IoT & Robotics', 'Hardware / Automation', Icons.precision_manufacturing),
+  _Committee('Mechanical Design', 'CAD / SolidWorks', Icons.engineering),
+
+  _Committee('Media & UI/UX', 'Graphic Design / Video Editing / Branding', Icons.design_services),
+  _Committee('PR', 'Presentation Skills / Communication Skills', Icons.campaign), // أو Icons.public
+  _Committee('HR & PM', 'Human Resources / Project Management', Icons.groups),
+  ];
 
 /// قسم "Preferred Committee(s)".
 class CommitteesSection extends StatelessWidget {
@@ -57,7 +60,7 @@ class CommitteesSection extends StatelessWidget {
                       title: _committees[i].name,
                       subtitle: _committees[i].subtitle,
                       icon: _committees[i].icon,
-                      color: AppColors.accent(i),
+                      color: AppColors.cyan,
                       selected: selected.contains(_committees[i].name),
                       onTap: () => onToggle(_committees[i].name),
                     ),

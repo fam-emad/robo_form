@@ -127,35 +127,39 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      PageShell(
-      maxWidth: 900,
-      child: RegistrationForm(
-        formKey: _formKey,
-        fieldKeys: _keys,
-        enNameController: _enName,
-        emailController: _email,
-        level: _level,
-        isStudent: _isStudent,
-        agreed: _agree,
-        attempted: _attempted,
-        errorCount: _errorCount,
-        selectedCommittees: _selected,
-        onFieldChanged: _refresh,
-        onLevelChanged: (v) => setState(() => _level = v),
-        onStudentChanged: (v) => setState(() => _isStudent = v),
-        onCommitteeToggle: _toggleCommittee,
-        onAgreeChanged: (v) => setState(() => _agree = v),
-        onSubmit: _submit,
-      ),
-    ),
-      if (_submitting)
-        const Positioned.fill(
-          child: ColoredBox(
-            color: Color(0x99000000),
-            child: Center(child: CircularProgressIndicator()),
-          ),
+    return SafeArea(
+      top: true,
+      bottom: true,
+      child: Stack(children: [
+        PageShell(
+        maxWidth: 900,
+        child: RegistrationForm(
+          formKey: _formKey,
+          fieldKeys: _keys,
+          enNameController: _enName,
+          emailController: _email,
+          level: _level,
+          isStudent: _isStudent,
+          agreed: _agree,
+          attempted: _attempted,
+          errorCount: _errorCount,
+          selectedCommittees: _selected,
+          onFieldChanged: _refresh,
+          onLevelChanged: (v) => setState(() => _level = v),
+          onStudentChanged: (v) => setState(() => _isStudent = v),
+          onCommitteeToggle: _toggleCommittee,
+          onAgreeChanged: (v) => setState(() => _agree = v),
+          onSubmit: _submit,
         ),
-    ]);
+      ),
+        if (_submitting)
+          const Positioned.fill(
+            child: ColoredBox(
+              color: Color(0x99000000),
+              child: Center(child: CircularProgressIndicator()),
+            ),
+          ),
+      ]),
+    );
   }
 }
