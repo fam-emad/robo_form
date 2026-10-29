@@ -21,7 +21,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final FieldKeys _keys = {
     for (final k in [
       'arName', 'enName', 'nid', 'seat', 'address',
-      'phone', 'email', 'dept', 'discord', 'linkedin',
+      'phone', 'email', 'discord', 'linkedin',
     ])
       k: GlobalKey<FormFieldState<String>>(),
   };
@@ -30,6 +30,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _email = TextEditingController();
 
   String _level = 'Level 1';
+  String _dept = 'CS';
   bool _isStudent = true;
   bool _agree = false;
   bool _attempted = false;
@@ -98,7 +99,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         'address': _val('address'),
         'phone': _val('phone'),
         'email': _email.text.trim(),
-        'dept': _val('dept'),
+        'dept': _dept,
         'discord': _val('discord'),
         'linkedin': _val('linkedin'),
         'committees': _selected.toList(),
@@ -139,6 +140,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           enNameController: _enName,
           emailController: _email,
           level: _level,
+          dept: _dept,
           isStudent: _isStudent,
           agreed: _agree,
           attempted: _attempted,
@@ -146,6 +148,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           selectedCommittees: _selected,
           onFieldChanged: _refresh,
           onLevelChanged: (v) => setState(() => _level = v),
+          onDeptChanged: (v) => setState(() => _dept = v),
           onStudentChanged: (v) => setState(() => _isStudent = v),
           onCommitteeToggle: _toggleCommittee,
           onAgreeChanged: (v) => setState(() => _agree = v),

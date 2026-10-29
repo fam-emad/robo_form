@@ -17,6 +17,7 @@ class RegistrationForm extends StatelessWidget {
   final TextEditingController enNameController;
   final TextEditingController emailController;
   final String level;
+  final String dept;
   final bool isStudent;
   final bool agreed;
   final bool attempted;
@@ -24,6 +25,7 @@ class RegistrationForm extends StatelessWidget {
   final Set<String> selectedCommittees;
   final VoidCallback onFieldChanged;
   final ValueChanged<String> onLevelChanged;
+  final ValueChanged<String> onDeptChanged;
   final ValueChanged<bool> onStudentChanged;
   final ValueChanged<String> onCommitteeToggle;
   final ValueChanged<bool> onAgreeChanged;
@@ -36,6 +38,7 @@ class RegistrationForm extends StatelessWidget {
     required this.enNameController,
     required this.emailController,
     required this.level,
+    required this.dept,
     required this.isStudent,
     required this.agreed,
     required this.attempted,
@@ -43,6 +46,7 @@ class RegistrationForm extends StatelessWidget {
     required this.selectedCommittees,
     required this.onFieldChanged,
     required this.onLevelChanged,
+    required this.onDeptChanged,
     required this.onStudentChanged,
     required this.onCommitteeToggle,
     required this.onAgreeChanged,
@@ -89,6 +93,8 @@ class RegistrationForm extends StatelessWidget {
             const Gap.v(28),
             AcademicSection(
               fieldKeys: fieldKeys,
+              dept: dept,
+              onDeptChanged: onDeptChanged,
               onFieldChanged: onFieldChanged,
             ),
             const Gap.v(28),

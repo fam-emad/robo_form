@@ -3,14 +3,30 @@ import '../../../core/validators.dart';
 import '../../../widgets/widgets.dart';
 import 'field_keys.dart';
 
+const _departments = [
+  'CS',
+  'SC',
+  'IS',
+  'CSYS',
+  'AI',
+  'Robotics',
+  'Cybersecurity',
+  'Multi Media',
+  'SWE',
+];
+
 /// قسم "Academic & Social".
 class AcademicSection extends StatelessWidget {
   final FieldKeys fieldKeys;
+  final String dept;
+  final ValueChanged<String> onDeptChanged;
   final VoidCallback onFieldChanged;
 
   const AcademicSection({
     super.key,
     required this.fieldKeys,
+    required this.dept,
+    required this.onDeptChanged,
     required this.onFieldChanged,
   });
 
@@ -21,13 +37,13 @@ class AcademicSection extends StatelessWidget {
       title: 'Academic & Social',
       child: SpacedColumn(spacing: 16, children: [
         FieldRow(children: [
-          AppTextField(
-            key: fieldKeys['dept'],
+          AppDropdownField<String>(
             label: 'Department / Major',
-            hint: 'e.g. Computer Science',
+            value: dept,
+            items: _departments,
+            itemLabel: (s) => s,
             prefixIcon: Icons.school_outlined,
-            rule: (v) => Validators.minLength(v, 2),
-            onChanged: (_) => onFieldChanged(),
+            onChanged: onDeptChanged,
           ),
           AppTextField(
             key: fieldKeys['discord'],
