@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import '../core/app_colors.dart';
+import '../services/form_status_service.dart';
 import '../services/sheets_service.dart';
 import '../widgets/widgets.dart';
+import 'closed_screen.dart';
 import 'refactor/registration/field_keys.dart';
 import 'refactor/registration/registration_form.dart';
 import 'success_screen.dart';
 
+// ────────────────────────────────────────────────────────────────
+// حالات الفورم
+// ────────────────────────────────────────────────────────────────
+enum _FormStatus { loading, open, closed }
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -14,10 +20,17 @@ class RegistrationScreen extends StatefulWidget {
   State<RegistrationScreen> createState() => _RegistrationScreenState();
 }
 
-class _RegistrationScreenState extends State<RegistrationScreen> {
+class _RegistrationScreenState extends State<RegistrationScreen>
+    with SingleTickerProviderStateMixin {
+  // ── حالة الفورم ────────────────────────────────────────────────
+  _FormStatus _status = _FormStatus.loading;
+
+  // ── انيميشن الـ loading skeleton ────────────────────────────────
+  late final AnimationController _shimmer;
+
+  // ── بيانات الفورم ───────────────────────────────────────────────
   final _formKey = GlobalKey<FormState>();
 
-  // مفاتيح الحقول بالترتيب (عشان العدّ والسكرول لأول خطأ)
   final FieldKeys _keys = {
     for (final k in [
       'arName', 'enName', 'nid', 'seat', 'address',
@@ -37,13 +50,40 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   bool _submitting = false;
   final Set<String> _selected = {};
 
+  // ────────────────────────────────────────────────────────────────
+  @override
+  void initState() {
+    super.initState();
+    _shimmer = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1400),
+    )..repeat(reverse: true);
+
+    _checkStatus();
+  }
+
+  Future<void> _checkStatus() async {
+    final result = await FormStatusService.check();
+    if (!mounted) return;
+    setState(() {
+      _status = result == FormStatus.closed
+          ? _FormStatus.closed
+          : _FormStatus.open;
+    });
+    if (_status != _FormStatus.loading) _shimmer.stop();
+  }
+
   @override
   void dispose() {
+    _shimmer.dispose();
     _enName.dispose();
     _email.dispose();
     super.dispose();
   }
 
+  // ────────────────────────────────────────────────────────────────
+  // Form helpers
+  // ────────────────────────────────────────────────────────────────
   int get _errorCount {
     var n = _keys.values.where((k) => k.currentState?.hasError ?? false).length;
     if (_attempted && _selected.isEmpty) n++;
@@ -69,7 +109,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     setState(() {});
 
     if (!ok) {
-      // سكرول لأول حقل فيه خطأ
       for (final k in _keys.values) {
         if ((k.currentState?.hasError ?? false) && k.currentContext != null) {
           Scrollable.ensureVisible(k.currentContext!,
@@ -126,15 +165,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     ));
   }
 
+  // ────────────────────────────────────────────────────────────────
+  // Build
+  // ────────────────────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: true,
-      bottom: true,
-      child: Stack(children: [
-        PageShell(
-        maxWidth: 900,
-        child: RegistrationForm(
+    return switch (_status) {
+      _FormStatus.loading => _LoadingShell(shimmer: _shimmer),
+      _FormStatus.closed  => const ClosedScreen(),
+      _FormStatus.open    => _OpenForm(
           formKey: _formKey,
           fieldKeys: _keys,
           enNameController: _enName,
@@ -146,6 +185,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           attempted: _attempted,
           errorCount: _errorCount,
           selectedCommittees: _selected,
+          submitting: _submitting,
           onFieldChanged: _refresh,
           onLevelChanged: (v) => setState(() => _level = v),
           onDeptChanged: (v) => setState(() => _dept = v),
@@ -154,15 +194,194 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           onAgreeChanged: (v) => setState(() => _agree = v),
           onSubmit: _submit,
         ),
+    };
+  }
+}
+
+// ════════════════════════════════════════════════════════════════
+// Loading Shell — skeleton يشبه شكل الفورم الحقيقي
+// ════════════════════════════════════════════════════════════════
+class _LoadingShell extends StatelessWidget {
+  final AnimationController shimmer;
+
+  const _LoadingShell({required this.shimmer});
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: true,
+      bottom: true,
+      child: PageShell(
+        maxWidth: 900,
+        child: AnimatedBuilder(
+          animation: shimmer,
+          builder: (_, _x) {
+            final alpha = (0.04 + 0.06 * shimmer.value);
+            return AppCard(
+              padding: const EdgeInsets.all(28),
+              radius: 20,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // شريط العنوان
+                  _SkeletonBar(width: 200, height: 18, alpha: alpha),
+                  const Gap.v(8),
+                  _SkeletonBar(width: 300, height: 12, alpha: alpha),
+                  const Gap.v(32),
+                  // صفوف الـ skeleton
+                  for (var i = 0; i < 5; i++) ...[
+                    Row(children: [
+                      Expanded(child: _SkeletonBar(height: 48, alpha: alpha)),
+                      const Gap.h(16),
+                      Expanded(child: _SkeletonBar(height: 48, alpha: alpha)),
+                    ]),
+                    const Gap.v(20),
+                  ],
+                  const Gap.v(8),
+                  // زرار
+                  _SkeletonBar(height: 46, alpha: alpha),
+                ],
+              ),
+            );
+          },
+        ),
       ),
-        if (_submitting)
-          const Positioned.fill(
-            child: ColoredBox(
-              color: Color(0x99000000),
-              child: Center(child: CircularProgressIndicator()),
+    );
+  }
+}
+
+class _SkeletonBar extends StatelessWidget {
+  final double? width;
+  final double height;
+  final double alpha;
+
+  const _SkeletonBar({this.width, required this.height, required this.alpha});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: alpha),
+        borderRadius: BorderRadius.circular(8),
+      ),
+    );
+  }
+}
+
+// ════════════════════════════════════════════════════════════════
+// Open Form — نفس المحتوى الأصلي مع fade-in عند الظهور
+// ════════════════════════════════════════════════════════════════
+class _OpenForm extends StatefulWidget {
+  final GlobalKey<FormState> formKey;
+  final FieldKeys fieldKeys;
+  final TextEditingController enNameController;
+  final TextEditingController emailController;
+  final String level;
+  final String dept;
+  final bool isStudent;
+  final bool agreed;
+  final bool attempted;
+  final int errorCount;
+  final Set<String> selectedCommittees;
+  final bool submitting;
+  final VoidCallback onFieldChanged;
+  final ValueChanged<String> onLevelChanged;
+  final ValueChanged<String> onDeptChanged;
+  final ValueChanged<bool> onStudentChanged;
+  final ValueChanged<String> onCommitteeToggle;
+  final ValueChanged<bool> onAgreeChanged;
+  final VoidCallback onSubmit;
+
+  const _OpenForm({
+    required this.formKey,
+    required this.fieldKeys,
+    required this.enNameController,
+    required this.emailController,
+    required this.level,
+    required this.dept,
+    required this.isStudent,
+    required this.agreed,
+    required this.attempted,
+    required this.errorCount,
+    required this.selectedCommittees,
+    required this.submitting,
+    required this.onFieldChanged,
+    required this.onLevelChanged,
+    required this.onDeptChanged,
+    required this.onStudentChanged,
+    required this.onCommitteeToggle,
+    required this.onAgreeChanged,
+    required this.onSubmit,
+  });
+
+  @override
+  State<_OpenForm> createState() => _OpenFormState();
+}
+
+class _OpenFormState extends State<_OpenForm>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _fadeCtrl;
+  late final Animation<double> _fadeAnim;
+
+  @override
+  void initState() {
+    super.initState();
+    _fadeCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+    _fadeAnim = CurvedAnimation(parent: _fadeCtrl, curve: Curves.easeOut);
+    _fadeCtrl.forward();
+  }
+
+  @override
+  void dispose() {
+    _fadeCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _fadeAnim,
+      child: SafeArea(
+        top: true,
+        bottom: true,
+        child: Stack(children: [
+          PageShell(
+            maxWidth: 900,
+            child: RegistrationForm(
+              formKey: widget.formKey,
+              fieldKeys: widget.fieldKeys,
+              enNameController: widget.enNameController,
+              emailController: widget.emailController,
+              level: widget.level,
+              dept: widget.dept,
+              isStudent: widget.isStudent,
+              agreed: widget.agreed,
+              attempted: widget.attempted,
+              errorCount: widget.errorCount,
+              selectedCommittees: widget.selectedCommittees,
+              onFieldChanged: widget.onFieldChanged,
+              onLevelChanged: widget.onLevelChanged,
+              onDeptChanged: widget.onDeptChanged,
+              onStudentChanged: widget.onStudentChanged,
+              onCommitteeToggle: widget.onCommitteeToggle,
+              onAgreeChanged: widget.onAgreeChanged,
+              onSubmit: widget.onSubmit,
             ),
           ),
-      ]),
+          if (widget.submitting)
+            const Positioned.fill(
+              child: ColoredBox(
+                color: Color(0x99000000),
+                child: Center(child: CircularProgressIndicator()),
+              ),
+            ),
+        ]),
+      ),
     );
   }
 }

@@ -45,8 +45,8 @@ class BorderedBox extends StatelessWidget {
     this.margin,
     this.width,
     this.height,
-  })  : color = tint.withOpacity(fillOpacity),
-        borderColor = tint.withOpacity(borderOpacity),
+  })  : color = tint.withValues(alpha: fillOpacity),
+        borderColor = tint.withValues(alpha: borderOpacity),
         gradient = null,
         constraints = null,
         animationDuration = null;

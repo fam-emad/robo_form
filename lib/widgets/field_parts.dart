@@ -59,7 +59,7 @@ class FieldBox extends StatelessWidget {
       animationDuration: const Duration(milliseconds: 150),
       constraints: const BoxConstraints(minHeight: 46),
       padding: const EdgeInsets.symmetric(horizontal: 12),
-      color: hasError ? AppColors.red.withOpacity(0.07) : AppColors.cardAlt,
+      color: hasError ? AppColors.red.withValues(alpha: 0.07) : AppColors.cardAlt,
       borderColor: hasError
           ? AppColors.red
           : focused

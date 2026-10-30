@@ -9,7 +9,6 @@ class SheetsException implements Exception {
   String toString() => message;
 }
 
-/// بيبعت بيانات التسجيل لـ Google Sheet عن طريق Google Apps Script.
 class SheetsService {
   SheetsService._();
 

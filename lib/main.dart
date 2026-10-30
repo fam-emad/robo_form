@@ -16,7 +16,7 @@ class RoboTechApp extends StatelessWidget {
         brightness: Brightness.dark,
         scaffoldBackgroundColor: AppColors.bg,
         // textTheme: GoogleFonts.spaceGroteskTextTheme(
-        //   ThemeData.dark().textTheme,
+        //   ThemeData.dark().textTheme,2
         // ),
       ),
       home: const RegistrationScreen(),
