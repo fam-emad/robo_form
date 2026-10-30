@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../core/app_colors.dart';
 import '../widgets/widgets.dart';
+import '../widgets/fade_slide_in.dart'; // أو ضيفه في widgets.dart كـ export
 
 class CommitteeDetail {
   final String name;
@@ -95,11 +96,21 @@ const _allCommittees = [
   ),
 ];
 
+/// توقيتات الظهور (بالمللي ثانية) — عدّلها من هنا لو عايزه أبطأ أو أسرع.
+const _headerDelay = 0;
+const _titleDelay = 90;
+const _subtitleDelay = 170;
+const _cardsStart = 260;
+const _cardStep = 70; // الفرق بين كل كارت والتاني
+const _cardsMaxSteps = 7; // عشان آخر الكروت ما تتأخرش كتير
+
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    const ctaDelay = _cardsStart + (_cardsMaxSteps + 1) * _cardStep;
+
     return SafeArea(
       top: true,
       bottom: true,
@@ -110,37 +121,47 @@ class AboutScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Back Button & Status Badge Header Row
-            Row(
-              children: [
-                InkWell(
-                  borderRadius: BorderRadius.circular(8),
-                  onTap: () => Navigator.of(context).pop(),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 4),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.arrow_back, size: 16, color: AppColors.cyan),
-                        Gap.h(6),
-                        AppText('Back to Registration', 11, color: AppColors.cyan, weight: FontWeight.w600),
-                      ],
+            FadeSlideIn(
+              delay: const Duration(milliseconds: _headerDelay),
+              dy: 10,
+              child: Row(
+                children: [
+                  InkWell(
+                    borderRadius: BorderRadius.circular(8),
+                    onTap: () => Navigator.of(context).pop(),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 4),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.arrow_back, size: 16, color: AppColors.cyan),
+                          Gap.h(6),
+                          AppText('Back to Registration', 11, color: AppColors.cyan, weight: FontWeight.w600),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                const Spacer(),
-                const StatusBadge(label: 'OUR COMMITTEES · 2026 / 2027'),
-              ],
+                  const Spacer(),
+                  const StatusBadge(label: 'OUR COMMITTEES · 2026 / 2027'),
+                ],
+              ),
             ),
             const Gap.v(14),
-            const TwoToneTitle(
-              first: 'About RoboTech',
-              second: 'Committees & Teams.',
-              size: 26,
+            const FadeSlideIn(
+              delay: Duration(milliseconds: _titleDelay),
+              child: TwoToneTitle(
+                first: 'About RoboTech',
+                second: 'Committees & Teams.',
+                size: 26,
+              ),
             ),
             const Gap.v(6),
-            const AppText.muted(
-              'Discover our specialized technical, creative, and operational teams driving engineering excellence, innovation, and community growth.',
-              12,
+            const FadeSlideIn(
+              delay: Duration(milliseconds: _subtitleDelay),
+              child: AppText.muted(
+                'Discover our specialized technical, creative, and operational teams driving engineering excellence, innovation, and community growth.',
+                12,
+              ),
             ),
             const Gap.v(24),
 
@@ -153,10 +174,17 @@ class AboutScreen extends StatelessWidget {
                 spacing: 16,
                 runSpacing: 16,
                 children: [
-                  for (final item in _allCommittees)
+                  for (var i = 0; i < _allCommittees.length; i++)
                     SizedBox(
                       width: cardWidth,
-                      child: _CommitteeCard(item: item),
+                      child: FadeSlideIn(
+                        delay: Duration(
+                          milliseconds: _cardsStart +
+                              (i < _cardsMaxSteps ? i : _cardsMaxSteps) *
+                                  _cardStep,
+                        ),
+                        child: _CommitteeCard(item: _allCommittees[i]),
+                      ),
                     ),
                 ],
               );
@@ -164,23 +192,49 @@ class AboutScreen extends StatelessWidget {
 
             const Gap.v(32),
             // Call to Action Banner
-            BorderedBox(
-              radius: 16,
-              padding: const EdgeInsets.all(24),
-              color: AppColors.card,
-              borderColor: AppColors.cyan.withValues(alpha: 0.3),
-              child: LayoutBuilder(builder: (context, c) {
-                final compact = c.maxWidth < 500;
-                if (compact) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+            FadeSlideIn(
+              delay: const Duration(milliseconds: ctaDelay),
+              child: BorderedBox(
+                radius: 16,
+                padding: const EdgeInsets.all(24),
+                color: AppColors.card,
+                borderColor: AppColors.cyan.withValues(alpha: 0.3),
+                child: LayoutBuilder(builder: (context, c) {
+                  final compact = c.maxWidth < 500;
+                  if (compact) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const AppText('Ready to start your journey?', 16, weight: FontWeight.w700),
+                        const Gap.v(4),
+                        const AppText.muted('Choose your preferred committee and apply for recruitment now.', 11),
+                        const Gap.v(16),
+                        SizedBox(
+                          width: double.infinity,
+                          child: PrimaryButton(
+                            label: 'Apply Now',
+                            icon: Icons.arrow_forward,
+                            onTap: () => Navigator.of(context).pop(),
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                  return Row(
                     children: [
-                      const AppText('Ready to start your journey?', 16, weight: FontWeight.w700),
-                      const Gap.v(4),
-                      const AppText.muted('Choose your preferred committee and apply for recruitment now.', 11),
-                      const Gap.v(16),
+                      const Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            AppText('Ready to start your journey?', 16, weight: FontWeight.w700),
+                            Gap.v(4),
+                            AppText.muted('Choose your preferred committee and apply for recruitment now.', 11),
+                          ],
+                        ),
+                      ),
+                      const Gap.h(20),
                       SizedBox(
-                        width: double.infinity,
+                        width: 150,
                         child: PrimaryButton(
                           label: 'Apply Now',
                           icon: Icons.arrow_forward,
@@ -189,31 +243,8 @@ class AboutScreen extends StatelessWidget {
                       ),
                     ],
                   );
-                }
-                return Row(
-                  children: [
-                    const Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          AppText('Ready to start your journey?', 16, weight: FontWeight.w700),
-                          Gap.v(4),
-                          AppText.muted('Choose your preferred committee and apply for recruitment now.', 11),
-                        ],
-                      ),
-                    ),
-                    const Gap.h(20),
-                    SizedBox(
-                      width: 150,
-                      child: PrimaryButton(
-                        label: 'Apply Now',
-                        icon: Icons.arrow_forward,
-                        onTap: () => Navigator.of(context).pop(),
-                      ),
-                    ),
-                  ],
-                );
-              }),
+                }),
+              ),
             ),
           ],
         ),

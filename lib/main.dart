@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
+import 'package:flutter_application_1/screens/splash_screen.dart'; 
 import 'core/app_colors.dart';
 import 'screens/registration_screen.dart';
 
@@ -19,7 +20,7 @@ class RoboTechApp extends StatelessWidget {
         //   ThemeData.dark().textTheme,
         // ),
       ),
-      home: const RegistrationScreen(),
+      home: const SplashScreen(),
     );
   }
 }
